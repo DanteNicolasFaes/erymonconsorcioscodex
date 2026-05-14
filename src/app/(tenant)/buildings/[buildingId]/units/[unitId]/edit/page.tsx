@@ -90,7 +90,7 @@ export default async function EditUnitPage({
           <h1 className="mt-3 text-2xl font-semibold">
             Editar unidad funcional
           </h1>
-          <p className="muted">{building.name}</p>
+          <p className="muted">Edificio: {building.name}</p>
         </div>
         {query?.error ? (
           <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">

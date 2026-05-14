@@ -85,7 +85,7 @@ export function FunctionalUnitForm({
           <option value="cochera">Cochera</option>
           <option value="baulera">Baulera</option>
           <option value="local">Local</option>
-          <option value="encargado">Encargado</option>
+          <option value="encargado">Vivienda del encargado</option>
         </select>
       </label>
 
@@ -114,7 +114,7 @@ export function FunctionalUnitForm({
 
       {type === "cochera" ? (
         <label className="grid gap-2 text-sm font-medium">
-          Numero de cochera
+          Número / identificación de cochera
           <input
             className="rounded-md border border-[var(--border)] px-3 py-2"
             name="unit_number"
@@ -126,7 +126,7 @@ export function FunctionalUnitForm({
 
       {type === "baulera" ? (
         <label className="grid gap-2 text-sm font-medium">
-          Numero de baulera
+          Número / identificación de baulera
           <input
             className="rounded-md border border-[var(--border)] px-3 py-2"
             name="unit_number"
@@ -138,7 +138,7 @@ export function FunctionalUnitForm({
 
       {type === "local" ? (
         <label className="grid gap-2 text-sm font-medium">
-          Numero / nombre del local
+          Número / nombre del local
           <input
             className="rounded-md border border-[var(--border)] px-3 py-2"
             name="unit_number"
@@ -170,7 +170,7 @@ export function FunctionalUnitForm({
       ) : null}
 
       <label className="grid gap-2 text-sm font-medium">
-        Ocupacion
+        Ocupación
         <select
           className="rounded-md border border-[var(--border)] px-3 py-2"
           name="occupancy_status"
@@ -178,7 +178,7 @@ export function FunctionalUnitForm({
           required
         >
           <option value="sin_datos">Sin datos</option>
-          <option value="vacia">Vacia</option>
+          <option value="vacia">Vacía</option>
           <option value="habitada">Habitada</option>
           <option value="en_obra">En obra</option>
         </select>

@@ -63,7 +63,7 @@ export default async function NewUnitPage({
           <h1 className="mt-3 text-2xl font-semibold">
             Crear unidad funcional
           </h1>
-          <p className="muted">{building.name}</p>
+          <p className="muted">Edificio: {building.name}</p>
         </div>
         {query?.error ? (
           <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -71,9 +71,15 @@ export default async function NewUnitPage({
           </p>
         ) : null}
         {query?.created === "1" ? (
-          <p className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-            Unidad funcional creada correctamente. Podés cargar otra.
-          </p>
+          <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            <p>Unidad funcional creada correctamente. Podés cargar otra.</p>
+            <Link
+              href={`/buildings/${building.id}/units`}
+              className="mt-2 inline-flex font-medium text-emerald-800 underline-offset-4 hover:underline"
+            >
+              Ver unidades funcionales
+            </Link>
+          </div>
         ) : null}
         {building.status === "archived" ? (
           <p className="rounded-md border border-[var(--border)] bg-white px-3 py-2 text-sm">

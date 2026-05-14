@@ -38,7 +38,7 @@ const typeLabels: Record<string, string> = {
   cochera: "Cochera",
   baulera: "Baulera",
   local: "Local",
-  encargado: "Encargado"
+  encargado: "Vivienda del encargado"
 };
 
 const occupancyLabels: Record<string, string> = {
@@ -57,6 +57,50 @@ function formatDate(value: string | null) {
     dateStyle: "short",
     timeStyle: "short"
   }).format(new Date(value));
+}
+
+function unitDetailFields(unit: FunctionalUnit) {
+  if (unit.type === "cochera" || unit.type === "baulera") {
+    return [
+      {
+        label: "Identificación",
+        value: unit.unit_number || "Sin dato"
+      }
+    ];
+  }
+
+  if (unit.type === "local") {
+    return [
+      {
+        label: "Nombre / número",
+        value: unit.unit_number || "Sin dato"
+      }
+    ];
+  }
+
+  if (unit.type === "encargado") {
+    return [
+      {
+        label: "Piso",
+        value: unit.floor || "Sin dato"
+      },
+      {
+        label: "Departamento / unidad",
+        value: unit.unit_number || "Sin dato"
+      }
+    ];
+  }
+
+  return [
+    {
+      label: "Piso",
+      value: unit.floor || "Sin dato"
+    },
+    {
+      label: "Número",
+      value: unit.unit_number || "Sin dato"
+    }
+  ];
 }
 
 export default async function UnitDetailPage({
@@ -167,14 +211,12 @@ export default async function UnitDetailPage({
                 unit.occupancy_status}
             </dd>
           </div>
-          <div>
-            <dt className="font-medium">Piso</dt>
-            <dd className="muted">{unit.floor || "Sin dato"}</dd>
-          </div>
-          <div>
-            <dt className="font-medium">Número</dt>
-            <dd className="muted">{unit.unit_number || "Sin dato"}</dd>
-          </div>
+          {unitDetailFields(unit).map((field) => (
+            <div key={field.label}>
+              <dt className="font-medium">{field.label}</dt>
+              <dd className="muted">{field.value}</dd>
+            </div>
+          ))}
           <div>
             <dt className="font-medium">Estado</dt>
             <dd className="muted">{unit.status}</dd>
