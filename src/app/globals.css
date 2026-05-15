@@ -2,12 +2,12 @@
 
 :root {
   color-scheme: light;
-  --background: #f7f8fa;
-  --foreground: #17202a;
-  --muted: #5d6978;
-  --border: #d9dee7;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
   --surface: #ffffff;
-  --accent: #0f766e;
+  --accent: #4f46e5;
 }
 
 * {
@@ -35,9 +35,10 @@ a {
 
 .panel {
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
   background: var(--surface);
   padding: 24px;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
 }
 
 .muted {

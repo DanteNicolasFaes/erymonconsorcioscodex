@@ -3,6 +3,14 @@ import { notFound } from "next/navigation";
 import { requireTenantAdmin } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { ArchiveButton } from "@/components/buildings/archive-button";
+import {
+  Alert,
+  buttonStyles,
+  Card,
+  PageHeader,
+  PageShell,
+  StatusBadge
+} from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -66,62 +74,61 @@ export default async function BuildingDetailPage({
   }
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row">
-          <div>
-            <Link href="/buildings" className="text-sm text-[var(--accent)]">
-              Volver a Mis edificios
-            </Link>
-            <h1 className="mt-3 text-2xl font-semibold">{building.name}</h1>
-            <p className="muted">{building.address || "Sin dirección"}</p>
-          </div>
-          <div className="flex items-start gap-3">
-            <Link
-              href={`/buildings/${building.id}/units`}
-              className="rounded-md border border-[var(--border)] px-4 py-2 text-sm font-medium"
-            >
-              Unidades funcionales
-            </Link>
-            {building.status === "active" ? (
-              <>
-                <Link
-                  href={`/buildings/${building.id}/edit`}
-                  className="rounded-md border border-[var(--border)] px-4 py-2 text-sm font-medium"
-                >
-                  Editar
-                </Link>
-                <ArchiveButton buildingId={building.id} mode="archive" />
-              </>
-            ) : (
-              <ArchiveButton buildingId={building.id} mode="unarchive" />
-            )}
-          </div>
-        </div>
-        {query?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {query.error}
-          </p>
-        ) : null}
+    <PageShell>
+      <Card>
+        <PageHeader
+          title={building.name}
+          description={building.address || "Sin dirección"}
+          backHref="/buildings"
+          backLabel="Volver a Mis edificios"
+          actions={
+            <>
+              <Link
+                href={`/buildings/${building.id}/units`}
+                className={buttonStyles({ variant: "secondary" })}
+              >
+                Unidades funcionales
+              </Link>
+              {building.status === "active" ? (
+                <>
+                  <Link
+                    href={`/buildings/${building.id}/edit`}
+                    className={buttonStyles({ variant: "secondary" })}
+                  >
+                    Editar
+                  </Link>
+                  <ArchiveButton buildingId={building.id} mode="archive" />
+                </>
+              ) : (
+                <ArchiveButton buildingId={building.id} mode="unarchive" />
+              )}
+            </>
+          }
+        />
+        {query?.error ? <Alert variant="error">{query.error}</Alert> : null}
         <dl className="grid gap-4 text-sm md:grid-cols-2">
           <div>
-            <dt className="font-medium">CUIT</dt>
-            <dd className="muted">{building.cuit || "Sin dato"}</dd>
+            <dt className="font-medium text-slate-900">CUIT</dt>
+            <dd className="text-slate-500">{building.cuit || "Sin dato"}</dd>
           </div>
           <div>
-            <dt className="font-medium">Estado</dt>
-            <dd className="muted">{building.status}</dd>
+            <dt className="font-medium text-slate-900">Estado</dt>
+            <dd className="mt-1">
+              <StatusBadge status={building.status} />
+            </dd>
           </div>
           <div>
-            <dt className="font-medium">Creado</dt>
-            <dd className="muted">{formatDate(building.created_at)}</dd>
+            <dt className="font-medium text-slate-900">Creado</dt>
+            <dd className="text-slate-500">{formatDate(building.created_at)}</dd>
           </div>
           <div>
-            <dt className="font-medium">Archivado</dt>
-            <dd className="muted">{formatDate(building.archived_at)}</dd>
+            <dt className="font-medium text-slate-900">Archivado</dt>
+            <dd className="text-slate-500">
+              {formatDate(building.archived_at)}
+            </dd>
           </div>
         </dl>
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

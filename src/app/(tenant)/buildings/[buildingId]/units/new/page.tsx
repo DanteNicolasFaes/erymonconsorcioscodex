@@ -4,6 +4,7 @@ import { requireTenantAdmin } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { createFunctionalUnit } from "@/app/actions/functional-units";
 import { FunctionalUnitForm } from "@/components/functional-units/functional-unit-form";
+import { Alert, Card, PageHeader, PageShell } from "@/components/ui";
 
 type NewUnitPageProps = {
   params: Promise<{
@@ -51,27 +52,17 @@ export default async function NewUnitPage({
   }
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="mb-6">
-          <Link
-            href={`/buildings/${building.id}/units`}
-            className="text-sm text-[var(--accent)]"
-          >
-            Volver a unidades funcionales
-          </Link>
-          <h1 className="mt-3 text-2xl font-semibold">
-            Crear unidad funcional
-          </h1>
-          <p className="muted">Edificio: {building.name}</p>
-        </div>
-        {query?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {query.error}
-          </p>
-        ) : null}
+    <PageShell>
+      <Card>
+        <PageHeader
+          title="Crear unidad funcional"
+          description={`Edificio: ${building.name}`}
+          backHref={`/buildings/${building.id}/units`}
+          backLabel="Volver a unidades funcionales"
+        />
+        {query?.error ? <Alert variant="error">{query.error}</Alert> : null}
         {query?.created === "1" ? (
-          <div className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <Alert variant="success">
             <p>Unidad funcional creada correctamente. Podés cargar otra.</p>
             <Link
               href={`/buildings/${building.id}/units`}
@@ -79,12 +70,12 @@ export default async function NewUnitPage({
             >
               Ver unidades funcionales
             </Link>
-          </div>
+          </Alert>
         ) : null}
         {building.status === "archived" ? (
-          <p className="rounded-md border border-[var(--border)] bg-white px-3 py-2 text-sm">
+          <Alert variant="info">
             No se pueden crear unidades en un edificio archivado.
-          </p>
+          </Alert>
         ) : (
           <FunctionalUnitForm
             action={createFunctionalUnit}
@@ -92,7 +83,7 @@ export default async function NewUnitPage({
             submitLabel="Crear unidad funcional"
           />
         )}
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

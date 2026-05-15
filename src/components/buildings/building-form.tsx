@@ -1,4 +1,5 @@
 import { SubmitButton } from "@/components/auth/submit-button";
+import { fieldStyles, FormField } from "@/components/ui/form-field";
 
 type BuildingFormProps = {
   action: (formData: FormData) => Promise<void>;
@@ -21,31 +22,28 @@ export function BuildingForm({
       {building ? (
         <input type="hidden" name="building_id" value={building.id} />
       ) : null}
-      <label className="grid gap-2 text-sm font-medium">
-        Nombre
+      <FormField label="Nombre">
         <input
-          className="rounded-md border border-[var(--border)] px-3 py-2"
+          className={fieldStyles}
           name="name"
           defaultValue={building?.name ?? ""}
           required
         />
-      </label>
-      <label className="grid gap-2 text-sm font-medium">
-        Dirección
+      </FormField>
+      <FormField label="Dirección">
         <input
-          className="rounded-md border border-[var(--border)] px-3 py-2"
+          className={fieldStyles}
           name="address"
           defaultValue={building?.address ?? ""}
         />
-      </label>
-      <label className="grid gap-2 text-sm font-medium">
-        CUIT
+      </FormField>
+      <FormField label="CUIT">
         <input
-          className="rounded-md border border-[var(--border)] px-3 py-2"
+          className={fieldStyles}
           name="cuit"
           defaultValue={building?.cuit ?? ""}
         />
-      </label>
+      </FormField>
       <SubmitButton>{submitLabel}</SubmitButton>
     </form>
   );

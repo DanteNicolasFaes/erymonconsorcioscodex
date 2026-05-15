@@ -3,6 +3,14 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import { createClient } from "@/lib/supabase/server";
 import { ApprovalForm } from "@/components/superadmin/approval-form";
 import { RejectionForm } from "@/components/superadmin/rejection-form";
+import {
+  Alert,
+  Card,
+  EmptyState,
+  PageHeader,
+  PageShell,
+  StatusBadge
+} from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -49,57 +57,63 @@ export default async function SuperadminRequestsPage({
   }
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <h1 className="text-2xl font-semibold">Solicitudes pendientes</h1>
-          <LogoutButton />
-        </div>
-        {params?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {params.error}
-          </p>
-        ) : null}
+    <PageShell>
+      <Card>
+        <PageHeader
+          title="Solicitudes pendientes"
+          description="Revisión de altas de administradores."
+          actions={<LogoutButton />}
+        />
+        {params?.error ? <Alert variant="error">{params.error}</Alert> : null}
         {params?.message ? (
-          <p className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-            {params.message}
-          </p>
+          <Alert variant="success">{params.message}</Alert>
         ) : null}
         {!requests?.length ? (
-          <p className="muted">No hay solicitudes pendientes.</p>
+          <EmptyState
+            title="No hay solicitudes pendientes"
+            description="Cuando llegue una nueva solicitud de administrador, aparecerá en esta lista."
+          />
         ) : (
           <div className="grid gap-4">
             {requests.map((request) => (
               <article
                 key={request.id}
-                className="rounded-md border border-[var(--border)] bg-white p-4"
+                className="rounded-xl border border-slate-200 bg-white p-4"
               >
-                <div className="mb-4 grid gap-2 md:grid-cols-2">
+                <div className="mb-4 grid gap-3 md:grid-cols-2">
                   <div>
-                    <h2 className="text-lg font-semibold">
+                    <h2 className="text-lg font-semibold text-slate-900">
                       {request.full_name ?? "Sin nombre"}
                     </h2>
-                    <p className="muted text-sm">{request.email}</p>
+                    <p className="text-sm text-slate-500">{request.email}</p>
                   </div>
                   <div className="text-sm md:text-right">
-                    <p className="font-medium">{request.company_name}</p>
-                    <p className="muted">
+                    <p className="font-medium text-slate-900">
+                      {request.company_name}
+                    </p>
+                    <p className="text-slate-500">
                       Creada: {formatDate(request.created_at)}
                     </p>
                   </div>
                 </div>
                 <dl className="mb-4 grid gap-3 text-sm md:grid-cols-3">
                   <div>
-                    <dt className="font-medium">Teléfono</dt>
-                    <dd className="muted">{request.phone || "Sin dato"}</dd>
+                    <dt className="font-medium text-slate-900">Teléfono</dt>
+                    <dd className="text-slate-500">
+                      {request.phone || "Sin dato"}
+                    </dd>
                   </div>
                   <div>
-                    <dt className="font-medium">CUIT</dt>
-                    <dd className="muted">{request.cuit || "Sin dato"}</dd>
+                    <dt className="font-medium text-slate-900">CUIT</dt>
+                    <dd className="text-slate-500">
+                      {request.cuit || "Sin dato"}
+                    </dd>
                   </div>
                   <div>
-                    <dt className="font-medium">Estado</dt>
-                    <dd className="muted">{request.status}</dd>
+                    <dt className="font-medium text-slate-900">Estado</dt>
+                    <dd className="mt-1">
+                      <StatusBadge status={request.status} />
+                    </dd>
                   </div>
                 </dl>
                 <div className="grid gap-4 md:grid-cols-2">
@@ -110,7 +124,7 @@ export default async function SuperadminRequestsPage({
             ))}
           </div>
         )}
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { forgotPassword } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/auth/submit-button";
+import {
+  Alert,
+  Card,
+  fieldStyles,
+  FormField,
+  PageHeader,
+  PageShell
+} from "@/components/ui";
 
 type ForgotPasswordPageProps = {
   searchParams?: Promise<{
@@ -15,39 +23,32 @@ export default async function ForgotPasswordPage({
   const params = await searchParams;
 
   return (
-    <main className="page-shell">
-      <section className="panel max-w-md">
-        <h1 className="mb-3 text-2xl font-semibold">Recuperar contraseña</h1>
-        <p className="muted mb-6">
-          Ingresá tu email para recibir instrucciones de recuperación.
-        </p>
-        {params?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {params.error}
-          </p>
-        ) : null}
+    <PageShell>
+      <Card className="max-w-md">
+        <PageHeader
+          title="Recuperar contraseña"
+          description="Ingresá tu email para recibir instrucciones de recuperación."
+        />
+        {params?.error ? <Alert variant="error">{params.error}</Alert> : null}
         {params?.message ? (
-          <p className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-            {params.message}
-          </p>
+          <Alert variant="success">{params.message}</Alert>
         ) : null}
         <form action={forgotPassword} className="mb-6 grid gap-4">
-          <label className="grid gap-2 text-sm font-medium">
-            Email
+          <FormField label="Email">
             <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
+              className={fieldStyles}
               name="email"
               type="email"
               required
               autoComplete="email"
             />
-          </label>
+          </FormField>
           <SubmitButton>Enviar instrucciones</SubmitButton>
         </form>
-        <Link className="text-sm text-[var(--accent)]" href="/login">
+        <Link className="text-sm font-medium text-indigo-700 hover:text-indigo-800" href="/login">
           Volver al login
         </Link>
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

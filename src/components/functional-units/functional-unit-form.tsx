@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { SubmitButton } from "@/components/auth/submit-button";
+import { fieldStyles, FormField } from "@/components/ui/form-field";
 
 type FunctionalUnitFormProps = {
   action: (formData: FormData) => Promise<void>;
@@ -72,10 +73,9 @@ export function FunctionalUnitForm({
         <input type="hidden" name="functional_unit_id" value={unit.id} />
       ) : null}
 
-      <label className="grid gap-2 text-sm font-medium">
-        Tipo
+      <FormField label="Tipo">
         <select
-          className="rounded-md border border-[var(--border)] px-3 py-2"
+          className={fieldStyles}
           name="type"
           value={type}
           onChange={(event) => setType(event.target.value)}
@@ -87,92 +87,84 @@ export function FunctionalUnitForm({
           <option value="local">Local</option>
           <option value="encargado">Vivienda del encargado</option>
         </select>
-      </label>
+      </FormField>
 
       {type === "departamento" ? (
         <>
-          <label className="grid gap-2 text-sm font-medium">
-            Piso
+          <FormField label="Piso">
             <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
+              className={fieldStyles}
               name="floor"
               defaultValue={unit?.floor ?? ""}
               required
             />
-          </label>
-          <label className="grid gap-2 text-sm font-medium">
-            Departamento
+          </FormField>
+          <FormField label="Departamento">
             <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
+              className={fieldStyles}
               name="unit_number"
               defaultValue={unitValue}
               required
             />
-          </label>
+          </FormField>
         </>
       ) : null}
 
       {type === "cochera" ? (
-        <label className="grid gap-2 text-sm font-medium">
-          Número / identificación de cochera
+        <FormField label="Número / identificación de cochera">
           <input
-            className="rounded-md border border-[var(--border)] px-3 py-2"
+            className={fieldStyles}
             name="unit_number"
             defaultValue={unitValue}
             required
           />
-        </label>
+        </FormField>
       ) : null}
 
       {type === "baulera" ? (
-        <label className="grid gap-2 text-sm font-medium">
-          Número / identificación de baulera
+        <FormField label="Número / identificación de baulera">
           <input
-            className="rounded-md border border-[var(--border)] px-3 py-2"
+            className={fieldStyles}
             name="unit_number"
             defaultValue={unitValue}
             required
           />
-        </label>
+        </FormField>
       ) : null}
 
       {type === "local" ? (
-        <label className="grid gap-2 text-sm font-medium">
-          Número / nombre del local
+        <FormField label="Número / nombre del local">
           <input
-            className="rounded-md border border-[var(--border)] px-3 py-2"
+            className={fieldStyles}
             name="unit_number"
             defaultValue={unitValue}
             required
           />
-        </label>
+        </FormField>
       ) : null}
 
       {type === "encargado" ? (
         <>
-          <label className="grid gap-2 text-sm font-medium">
-            Piso
+          <FormField label="Piso">
             <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
+              className={fieldStyles}
               name="floor"
               defaultValue={unit?.floor ?? ""}
             />
-          </label>
-          <label className="grid gap-2 text-sm font-medium">
-            Departamento / unidad
+          </FormField>
+          <FormField label="Departamento / unidad">
             <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
+              className={fieldStyles}
               name="unit_number"
               defaultValue={unitValue}
             />
-          </label>
+          </FormField>
         </>
       ) : null}
 
-      <label className="grid gap-2 text-sm font-medium">
-        Ocupación
+      <FormField label="Ocupación">
         <select
-          className="rounded-md border border-[var(--border)] px-3 py-2"
+          className={fieldStyles}
           name="occupancy_status"
           defaultValue={unit?.occupancy_status ?? "sin_datos"}
           required
@@ -182,7 +174,7 @@ export function FunctionalUnitForm({
           <option value="habitada">Habitada</option>
           <option value="en_obra">En obra</option>
         </select>
-      </label>
+      </FormField>
 
       <SubmitButton>{submitLabel}</SubmitButton>
     </form>

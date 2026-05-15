@@ -1,18 +1,17 @@
 import { LogoutButton } from "@/components/auth/logout-button";
+import { Card, PageHeader, PageShell, StatusBadge } from "@/components/ui";
 
 export default function RequestRejectedPage() {
   return (
-    <main className="page-shell">
-      <section className="panel max-w-xl">
-        <h1 className="mb-3 text-2xl font-semibold">Solicitud rechazada</h1>
-        <p className="muted">
-          La solicitud de alta no fue aprobada. En esta fase se muestra un
-          estado simple sin flujo adicional.
-        </p>
-        <div className="mt-6">
-          <LogoutButton />
-        </div>
-      </section>
-    </main>
+    <PageShell>
+      <Card className="max-w-xl">
+        <PageHeader
+          title="Solicitud rechazada"
+          description="La solicitud de alta no fue aprobada. En esta fase se muestra un estado simple sin flujo adicional."
+          actions={<StatusBadge status="rejected" />}
+        />
+        <LogoutButton />
+      </Card>
+    </PageShell>
   );
 }

@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireTenantAdmin } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { updateBuilding } from "@/app/actions/buildings";
 import { BuildingForm } from "@/components/buildings/building-form";
+import { Alert, Card, PageHeader, PageShell } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -54,26 +54,16 @@ export default async function EditBuildingPage({
   }
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="mb-6">
-          <Link
-            href={`/buildings/${building.id}`}
-            className="text-sm text-[var(--accent)]"
-          >
-            Volver al detalle
-          </Link>
-          <h1 className="mt-3 text-2xl font-semibold">Editar edificio</h1>
-        </div>
-        {query?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {query.error}
-          </p>
-        ) : null}
+    <PageShell>
+      <Card>
+        <PageHeader
+          title="Editar edificio"
+          backHref={`/buildings/${building.id}`}
+          backLabel="Volver al detalle"
+        />
+        {query?.error ? <Alert variant="error">{query.error}</Alert> : null}
         {building.status === "archived" ? (
-          <p className="rounded-md border border-[var(--border)] bg-white px-3 py-2 text-sm">
-            Los edificios archivados son de solo lectura.
-          </p>
+          <Alert variant="info">Los edificios archivados son de solo lectura.</Alert>
         ) : (
           <BuildingForm
             action={updateBuilding}
@@ -81,7 +71,7 @@ export default async function EditBuildingPage({
             building={building}
           />
         )}
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

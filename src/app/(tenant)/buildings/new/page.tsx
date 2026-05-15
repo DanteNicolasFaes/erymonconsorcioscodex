@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { requireTenantAdmin } from "@/lib/auth/guards";
 import { createBuilding } from "@/app/actions/buildings";
 import { BuildingForm } from "@/components/buildings/building-form";
+import { Alert, Card, PageHeader, PageShell } from "@/components/ui";
 
 type NewBuildingPageProps = {
   searchParams?: Promise<{
@@ -16,21 +16,16 @@ export default async function NewBuildingPage({
   const params = await searchParams;
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="mb-6">
-          <Link href="/buildings" className="text-sm text-[var(--accent)]">
-            Volver a Mis edificios
-          </Link>
-          <h1 className="mt-3 text-2xl font-semibold">Crear edificio</h1>
-        </div>
-        {params?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {params.error}
-          </p>
-        ) : null}
+    <PageShell>
+      <Card>
+        <PageHeader
+          title="Crear edificio"
+          backHref="/buildings"
+          backLabel="Volver a Mis edificios"
+        />
+        {params?.error ? <Alert variant="error">{params.error}</Alert> : null}
         <BuildingForm action={createBuilding} submitLabel="Crear edificio" />
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

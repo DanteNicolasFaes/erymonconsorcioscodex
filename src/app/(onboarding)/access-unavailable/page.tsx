@@ -1,17 +1,16 @@
 import { LogoutButton } from "@/components/auth/logout-button";
+import { Card, PageHeader, PageShell } from "@/components/ui";
 
 export default function AccessUnavailablePage() {
   return (
-    <main className="page-shell">
-      <section className="panel max-w-xl">
-        <h1 className="mb-3 text-2xl font-semibold">Acceso no disponible</h1>
-        <p className="muted">
-          La cuenta está activa, pero todavía no tiene un rol operativo válido.
-        </p>
-        <div className="mt-6">
-          <LogoutButton />
-        </div>
-      </section>
-    </main>
+    <PageShell>
+      <Card className="max-w-xl">
+        <PageHeader
+          title="Acceso no disponible"
+          description="La cuenta está activa, pero todavía no tiene un rol operativo válido."
+        />
+        <LogoutButton />
+      </Card>
+    </PageShell>
   );
 }

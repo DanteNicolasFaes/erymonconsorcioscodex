@@ -21,7 +21,9 @@ export function ArchiveFunctionalUnitButton({
     <form action={isArchive ? archiveFunctionalUnit : unarchiveFunctionalUnit}>
       <input type="hidden" name="building_id" value={buildingId} />
       <input type="hidden" name="functional_unit_id" value={unitId} />
-      <SubmitButton>{isArchive ? "Archivar" : "Desarchivar"}</SubmitButton>
+      <SubmitButton variant={isArchive ? "danger" : "secondary"}>
+        {isArchive ? "Archivar" : "Desarchivar"}
+      </SubmitButton>
     </form>
   );
 }

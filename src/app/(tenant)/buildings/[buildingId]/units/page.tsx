@@ -2,6 +2,15 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireTenantAdmin } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
+import {
+  Alert,
+  buttonStyles,
+  Card,
+  EmptyState,
+  PageHeader,
+  PageShell,
+  StatusBadge
+} from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -39,54 +48,25 @@ const typeLabels: Record<string, string> = {
   encargado: "Vivienda del encargado"
 };
 
-const occupancyLabels: Record<string, string> = {
-  vacia: "Vacía",
-  habitada: "Habitada",
-  en_obra: "En obra",
-  sin_datos: "Sin datos"
-};
-
 function unitDetailFields(unit: FunctionalUnit) {
   if (unit.type === "cochera" || unit.type === "baulera") {
-    return [
-      {
-        label: "Identificación",
-        value: unit.unit_number || "Sin dato"
-      }
-    ];
+    return [{ label: "Identificación", value: unit.unit_number || "Sin dato" }];
   }
 
   if (unit.type === "local") {
-    return [
-      {
-        label: "Nombre / número",
-        value: unit.unit_number || "Sin dato"
-      }
-    ];
+    return [{ label: "Nombre / número", value: unit.unit_number || "Sin dato" }];
   }
 
   if (unit.type === "encargado") {
     return [
-      {
-        label: "Piso",
-        value: unit.floor || "Sin dato"
-      },
-      {
-        label: "Departamento / unidad",
-        value: unit.unit_number || "Sin dato"
-      }
+      { label: "Piso", value: unit.floor || "Sin dato" },
+      { label: "Departamento / unidad", value: unit.unit_number || "Sin dato" }
     ];
   }
 
   return [
-    {
-      label: "Piso",
-      value: unit.floor || "Sin dato"
-    },
-    {
-      label: "Número",
-      value: unit.unit_number || "Sin dato"
-    }
+    { label: "Piso", value: unit.floor || "Sin dato" },
+    { label: "Número", value: unit.unit_number || "Sin dato" }
   ];
 }
 
@@ -134,42 +114,32 @@ export default async function UnitsPage({
   }
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row">
-          <div>
-            <Link
-              href={`/buildings/${building.id}`}
-              className="text-sm text-[var(--accent)]"
-            >
-              Volver al edificio
-            </Link>
-            <h1 className="mt-3 text-2xl font-semibold">
-              Unidades funcionales
-            </h1>
-            <p className="muted">{building.name}</p>
-          </div>
-          {building.status === "active" ? (
-            <Link
-              href={`/buildings/${building.id}/units/new`}
-              className="self-start rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white"
-            >
-              Crear unidad funcional
-            </Link>
-          ) : null}
-        </div>
-        {query?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {query.error}
-          </p>
-        ) : null}
-        <div className="mb-6 flex gap-3 text-sm">
+    <PageShell>
+      <Card>
+        <PageHeader
+          title="Unidades funcionales"
+          description={building.name}
+          backHref={`/buildings/${building.id}`}
+          backLabel="Volver al edificio"
+          actions={
+            building.status === "active" ? (
+              <Link
+                href={`/buildings/${building.id}/units/new`}
+                className={buttonStyles()}
+              >
+                Crear unidad funcional
+              </Link>
+            ) : null
+          }
+        />
+        {query?.error ? <Alert variant="error">{query.error}</Alert> : null}
+        <div className="mb-6 flex gap-3 text-sm font-medium">
           <Link
             href={`/buildings/${building.id}/units`}
             className={
               selectedStatus === "active"
-                ? "font-semibold text-[var(--accent)]"
-                : "text-[var(--muted)]"
+                ? "text-indigo-700"
+                : "text-slate-500 hover:text-indigo-700"
             }
           >
             Activas
@@ -178,58 +148,60 @@ export default async function UnitsPage({
             href={`/buildings/${building.id}/units?status=archived`}
             className={
               selectedStatus === "archived"
-                ? "font-semibold text-[var(--accent)]"
-                : "text-[var(--muted)]"
+                ? "text-indigo-700"
+                : "text-slate-500 hover:text-indigo-700"
             }
           >
             Archivadas
           </Link>
         </div>
         {!units?.length ? (
-          <p className="muted">
-            {selectedStatus === "active"
-              ? "Todavía no hay unidades activas."
-              : "No hay unidades archivadas."}
-          </p>
+          <EmptyState
+            title={
+              selectedStatus === "active"
+                ? "Todavía no hay unidades activas"
+                : "No hay unidades archivadas"
+            }
+            description="Las unidades funcionales cargadas para este edificio aparecerán acá."
+          />
         ) : (
           <div className="grid gap-4">
             {units.map((unit) => (
               <article
                 key={unit.id}
-                className="rounded-md border border-[var(--border)] bg-white p-4"
+                className="rounded-xl border border-slate-200 bg-white p-4"
               >
                 <div className="flex flex-col justify-between gap-3 md:flex-row">
                   <div>
-                    <h2 className="text-lg font-semibold">
+                    <h2 className="text-lg font-semibold text-slate-900">
                       <Link href={`/buildings/${building.id}/units/${unit.id}`}>
                         {unit.identifier}
                       </Link>
                     </h2>
-                    <p className="muted text-sm">
+                    <p className="text-sm text-slate-500">
                       {typeLabels[unit.type] ?? unit.type}
                     </p>
                   </div>
-                  <div className="text-sm md:text-right">
-                    <p className="font-medium">{unit.status}</p>
-                    <p className="muted">
-                      {occupancyLabels[unit.occupancy_status] ??
-                        unit.occupancy_status}
-                    </p>
+                  <div className="flex flex-wrap gap-2 md:justify-end">
+                    <StatusBadge status={unit.status} />
+                    <StatusBadge status={unit.occupancy_status} />
                   </div>
                 </div>
                 <dl className="mt-4 grid gap-3 text-sm md:grid-cols-3">
                   {unitDetailFields(unit).map((field) => (
                     <div key={field.label}>
-                      <dt className="font-medium">{field.label}</dt>
-                      <dd className="muted">{field.value}</dd>
+                      <dt className="font-medium text-slate-900">
+                        {field.label}
+                      </dt>
+                      <dd className="text-slate-500">{field.value}</dd>
                     </div>
                   ))}
                   <div>
-                    <dt className="font-medium">Detalle</dt>
+                    <dt className="font-medium text-slate-900">Detalle</dt>
                     <dd>
                       <Link
                         href={`/buildings/${building.id}/units/${unit.id}`}
-                        className="text-[var(--accent)]"
+                        className="font-medium text-indigo-700 hover:text-indigo-800"
                       >
                         Ver unidad
                       </Link>
@@ -240,7 +212,7 @@ export default async function UnitsPage({
             ))}
           </div>
         )}
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

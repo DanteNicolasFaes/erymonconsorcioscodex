@@ -15,7 +15,9 @@ export function ArchiveButton({ buildingId, mode }: ArchiveButtonProps) {
   return (
     <form action={isArchive ? archiveBuilding : unarchiveBuilding}>
       <input type="hidden" name="building_id" value={buildingId} />
-      <SubmitButton>{isArchive ? "Archivar" : "Desarchivar"}</SubmitButton>
+      <SubmitButton variant={isArchive ? "danger" : "secondary"}>
+        {isArchive ? "Archivar" : "Desarchivar"}
+      </SubmitButton>
     </form>
   );
 }

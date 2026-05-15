@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { registerAdmin } from "@/app/actions/auth";
 import { SubmitButton } from "@/components/auth/submit-button";
+import {
+  Alert,
+  Card,
+  fieldStyles,
+  FormField,
+  PageHeader,
+  PageShell
+} from "@/components/ui";
 
 type RegisterPageProps = {
   searchParams?: Promise<{
@@ -12,79 +20,56 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
   const params = await searchParams;
 
   return (
-    <main className="page-shell">
-      <section className="panel max-w-xl">
-        <h1 className="mb-3 text-2xl font-semibold">
-          Registro de administrador
-        </h1>
-        <p className="muted mb-6">
-          La cuenta queda pendiente hasta que un superadmin apruebe la solicitud.
-        </p>
-        {params?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {params.error}
-          </p>
-        ) : null}
+    <PageShell>
+      <Card className="max-w-xl">
+        <PageHeader
+          title="Registro de administrador"
+          description="La cuenta queda pendiente hasta que un superadmin apruebe la solicitud."
+        />
+        {params?.error ? <Alert variant="error">{params.error}</Alert> : null}
         <form action={registerAdmin} className="mb-6 grid gap-4">
-          <label className="grid gap-2 text-sm font-medium">
-            Nombre completo
+          <FormField label="Nombre completo">
             <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
+              className={fieldStyles}
               name="full_name"
               required
               autoComplete="name"
             />
-          </label>
-          <label className="grid gap-2 text-sm font-medium">
-            Email
+          </FormField>
+          <FormField label="Email">
             <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
+              className={fieldStyles}
               name="email"
               type="email"
               required
               autoComplete="email"
             />
-          </label>
-          <label className="grid gap-2 text-sm font-medium">
-            Contraseña
+          </FormField>
+          <FormField label="Contraseña">
             <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
+              className={fieldStyles}
               name="password"
               type="password"
               required
               minLength={6}
               autoComplete="new-password"
             />
-          </label>
-          <label className="grid gap-2 text-sm font-medium">
-            Teléfono
-            <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
-              name="phone"
-              autoComplete="tel"
-            />
-          </label>
-          <label className="grid gap-2 text-sm font-medium">
-            Administradora
-            <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
-              name="company_name"
-              required
-            />
-          </label>
-          <label className="grid gap-2 text-sm font-medium">
-            CUIT
-            <input
-              className="rounded-md border border-[var(--border)] px-3 py-2"
-              name="cuit"
-            />
-          </label>
+          </FormField>
+          <FormField label="Teléfono">
+            <input className={fieldStyles} name="phone" autoComplete="tel" />
+          </FormField>
+          <FormField label="Administradora">
+            <input className={fieldStyles} name="company_name" required />
+          </FormField>
+          <FormField label="CUIT">
+            <input className={fieldStyles} name="cuit" />
+          </FormField>
           <SubmitButton>Enviar solicitud</SubmitButton>
         </form>
-        <Link className="text-sm text-[var(--accent)]" href="/login">
+        <Link className="text-sm font-medium text-indigo-700 hover:text-indigo-800" href="/login">
           Ya tengo cuenta
         </Link>
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

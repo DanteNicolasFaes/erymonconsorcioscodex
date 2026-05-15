@@ -3,6 +3,14 @@ import { notFound } from "next/navigation";
 import { requireTenantAdmin } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { ArchiveFunctionalUnitButton } from "@/components/functional-units/archive-functional-unit-button";
+import {
+  Alert,
+  buttonStyles,
+  Card,
+  PageHeader,
+  PageShell,
+  StatusBadge
+} from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -41,13 +49,6 @@ const typeLabels: Record<string, string> = {
   encargado: "Vivienda del encargado"
 };
 
-const occupancyLabels: Record<string, string> = {
-  vacia: "Vacía",
-  habitada: "Habitada",
-  en_obra: "En obra",
-  sin_datos: "Sin datos"
-};
-
 function formatDate(value: string | null) {
   if (!value) {
     return "-";
@@ -61,45 +62,23 @@ function formatDate(value: string | null) {
 
 function unitDetailFields(unit: FunctionalUnit) {
   if (unit.type === "cochera" || unit.type === "baulera") {
-    return [
-      {
-        label: "Identificación",
-        value: unit.unit_number || "Sin dato"
-      }
-    ];
+    return [{ label: "Identificación", value: unit.unit_number || "Sin dato" }];
   }
 
   if (unit.type === "local") {
-    return [
-      {
-        label: "Nombre / número",
-        value: unit.unit_number || "Sin dato"
-      }
-    ];
+    return [{ label: "Nombre / número", value: unit.unit_number || "Sin dato" }];
   }
 
   if (unit.type === "encargado") {
     return [
-      {
-        label: "Piso",
-        value: unit.floor || "Sin dato"
-      },
-      {
-        label: "Departamento / unidad",
-        value: unit.unit_number || "Sin dato"
-      }
+      { label: "Piso", value: unit.floor || "Sin dato" },
+      { label: "Departamento / unidad", value: unit.unit_number || "Sin dato" }
     ];
   }
 
   return [
-    {
-      label: "Piso",
-      value: unit.floor || "Sin dato"
-    },
-    {
-      label: "Número",
-      value: unit.unit_number || "Sin dato"
-    }
+    { label: "Piso", value: unit.floor || "Sin dato" },
+    { label: "Número", value: unit.unit_number || "Sin dato" }
   ];
 }
 
@@ -151,86 +130,79 @@ export default async function UnitDetailPage({
   }
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row">
-          <div>
-            <Link
-              href={`/buildings/${building.id}/units`}
-              className="text-sm text-[var(--accent)]"
-            >
-              Volver a unidades funcionales
-            </Link>
-            <h1 className="mt-3 text-2xl font-semibold">{unit.identifier}</h1>
-            <p className="muted">{building.name}</p>
-          </div>
-          <div className="flex items-start gap-3">
-            <Link
-              href={`/buildings/${building.id}/units/new`}
-              className="rounded-md border border-[var(--border)] px-4 py-2 text-sm font-medium"
-            >
-              Crear otra unidad funcional
-            </Link>
-            {unit.status === "active" ? (
-              <>
-                <Link
-                  href={`/buildings/${building.id}/units/${unit.id}/edit`}
-                  className="rounded-md border border-[var(--border)] px-4 py-2 text-sm font-medium"
-                >
-                  Editar
-                </Link>
+    <PageShell>
+      <Card>
+        <PageHeader
+          title={unit.identifier}
+          description={building.name}
+          backHref={`/buildings/${building.id}/units`}
+          backLabel="Volver a unidades funcionales"
+          actions={
+            <>
+              <Link
+                href={`/buildings/${building.id}/units/new`}
+                className={buttonStyles({ variant: "secondary" })}
+              >
+                Crear otra unidad funcional
+              </Link>
+              {unit.status === "active" ? (
+                <>
+                  <Link
+                    href={`/buildings/${building.id}/units/${unit.id}/edit`}
+                    className={buttonStyles({ variant: "secondary" })}
+                  >
+                    Editar
+                  </Link>
+                  <ArchiveFunctionalUnitButton
+                    buildingId={building.id}
+                    unitId={unit.id}
+                    mode="archive"
+                  />
+                </>
+              ) : (
                 <ArchiveFunctionalUnitButton
                   buildingId={building.id}
                   unitId={unit.id}
-                  mode="archive"
+                  mode="unarchive"
                 />
-              </>
-            ) : (
-              <ArchiveFunctionalUnitButton
-                buildingId={building.id}
-                unitId={unit.id}
-                mode="unarchive"
-              />
-            )}
-          </div>
-        </div>
-        {query?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {query.error}
-          </p>
-        ) : null}
+              )}
+            </>
+          }
+        />
+        {query?.error ? <Alert variant="error">{query.error}</Alert> : null}
         <dl className="grid gap-4 text-sm md:grid-cols-2">
           <div>
-            <dt className="font-medium">Tipo</dt>
-            <dd className="muted">{typeLabels[unit.type] ?? unit.type}</dd>
+            <dt className="font-medium text-slate-900">Tipo</dt>
+            <dd className="text-slate-500">{typeLabels[unit.type] ?? unit.type}</dd>
           </div>
           <div>
-            <dt className="font-medium">Ocupación</dt>
-            <dd className="muted">
-              {occupancyLabels[unit.occupancy_status] ??
-                unit.occupancy_status}
+            <dt className="font-medium text-slate-900">Ocupación</dt>
+            <dd className="mt-1">
+              <StatusBadge status={unit.occupancy_status} />
             </dd>
           </div>
           {unitDetailFields(unit).map((field) => (
             <div key={field.label}>
-              <dt className="font-medium">{field.label}</dt>
-              <dd className="muted">{field.value}</dd>
+              <dt className="font-medium text-slate-900">{field.label}</dt>
+              <dd className="text-slate-500">{field.value}</dd>
             </div>
           ))}
           <div>
-            <dt className="font-medium">Estado</dt>
-            <dd className="muted">{unit.status}</dd>
+            <dt className="font-medium text-slate-900">Estado</dt>
+            <dd className="mt-1">
+              <StatusBadge status={unit.status} />
+            </dd>
           </div>
           <div>
-            <dt className="font-medium">Creada</dt>
-            <dd className="muted">{formatDate(unit.created_at)}</dd>
+            <dt className="font-medium text-slate-900">Creada</dt>
+            <dd className="text-slate-500">{formatDate(unit.created_at)}</dd>
           </div>
           <div>
-            <dt className="font-medium">Archivada</dt>
-            <dd className="muted">{formatDate(unit.archived_at)}</dd>
+            <dt className="font-medium text-slate-900">Archivada</dt>
+            <dd className="text-slate-500">{formatDate(unit.archived_at)}</dd>
           </div>
         </dl>
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

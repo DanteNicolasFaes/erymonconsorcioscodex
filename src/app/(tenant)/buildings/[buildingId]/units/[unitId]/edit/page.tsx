@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireTenantAdmin } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { updateFunctionalUnit } from "@/app/actions/functional-units";
 import { FunctionalUnitForm } from "@/components/functional-units/functional-unit-form";
+import { Alert, Card, PageHeader, PageShell } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -78,29 +78,19 @@ export default async function EditUnitPage({
   }
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="mb-6">
-          <Link
-            href={`/buildings/${building.id}/units/${unit.id}`}
-            className="text-sm text-[var(--accent)]"
-          >
-            Volver al detalle
-          </Link>
-          <h1 className="mt-3 text-2xl font-semibold">
-            Editar unidad funcional
-          </h1>
-          <p className="muted">Edificio: {building.name}</p>
-        </div>
-        {query?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {query.error}
-          </p>
-        ) : null}
+    <PageShell>
+      <Card>
+        <PageHeader
+          title="Editar unidad funcional"
+          description={`Edificio: ${building.name}`}
+          backHref={`/buildings/${building.id}/units/${unit.id}`}
+          backLabel="Volver al detalle"
+        />
+        {query?.error ? <Alert variant="error">{query.error}</Alert> : null}
         {unit.status === "archived" ? (
-          <p className="rounded-md border border-[var(--border)] bg-white px-3 py-2 text-sm">
+          <Alert variant="info">
             Las unidades archivadas son de solo lectura.
-          </p>
+          </Alert>
         ) : (
           <FunctionalUnitForm
             action={updateFunctionalUnit}
@@ -109,7 +99,7 @@ export default async function EditUnitPage({
             unit={unit}
           />
         )}
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

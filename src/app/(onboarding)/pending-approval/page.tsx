@@ -1,19 +1,17 @@
 import { LogoutButton } from "@/components/auth/logout-button";
+import { Card, PageHeader, PageShell, StatusBadge } from "@/components/ui";
 
 export default function PendingApprovalPage() {
   return (
-    <main className="page-shell">
-      <section className="panel max-w-xl">
-        <h1 className="mb-3 text-2xl font-semibold">
-          Tu cuenta esta pendiente de aprobacion
-        </h1>
-        <p className="muted">
-          Un superadmin debe revisar la solicitud antes de habilitar el acceso.
-        </p>
-        <div className="mt-6">
-          <LogoutButton />
-        </div>
-      </section>
-    </main>
+    <PageShell>
+      <Card className="max-w-xl">
+        <PageHeader
+          title="Tu cuenta está pendiente de aprobación"
+          description="Un superadmin debe revisar la solicitud antes de habilitar el acceso."
+          actions={<StatusBadge status="pending" />}
+        />
+        <LogoutButton />
+      </Card>
+    </PageShell>
   );
 }

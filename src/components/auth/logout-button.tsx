@@ -1,13 +1,14 @@
 import { logout } from "@/app/actions/auth";
+import { buttonStyles } from "@/components/ui/button";
 
 export function LogoutButton() {
   return (
     <form action={logout}>
       <button
         type="submit"
-        className="rounded-md border border-[var(--border)] px-3 py-2 text-sm font-medium"
+        className={buttonStyles({ variant: "secondary" })}
       >
-        Cerrar sesion
+        Cerrar sesión
       </button>
     </form>
   );

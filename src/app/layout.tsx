@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Erymon Consorcios",
-  description: "Administracion multi-tenant de consorcios"
+  description: "Administración multi-tenant de consorcios"
 };
 
 export default function RootLayout({
@@ -15,14 +15,18 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body>
-        <header className="border-b border-[var(--border)] bg-white">
+        <header className="border-b border-slate-200 bg-white">
           <nav className="mx-auto flex min-h-16 w-[min(1120px,calc(100%-32px))] items-center justify-between gap-4">
-            <Link href="/" className="text-lg font-semibold">
+            <Link href="/" className="text-lg font-semibold text-slate-900">
               Erymon Consorcios
             </Link>
-            <div className="flex items-center gap-4 text-sm text-[var(--muted)]">
-              <Link href="/login">Login</Link>
-              <Link href="/register">Registro</Link>
+            <div className="flex items-center gap-4 text-sm font-medium text-slate-500">
+              <Link href="/login" className="hover:text-indigo-700">
+                Login
+              </Link>
+              <Link href="/register" className="hover:text-indigo-700">
+                Registro
+              </Link>
             </div>
           </nav>
         </header>

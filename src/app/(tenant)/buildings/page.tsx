@@ -2,6 +2,15 @@ import Link from "next/link";
 import { requireTenantAdmin } from "@/lib/auth/guards";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { createClient } from "@/lib/supabase/server";
+import {
+  Alert,
+  buttonStyles,
+  Card,
+  EmptyState,
+  PageHeader,
+  PageShell,
+  StatusBadge
+} from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -57,32 +66,28 @@ export default async function BuildingsPage({ searchParams }: BuildingsPageProps
   }
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="mb-4 flex items-center justify-between gap-4">
-          <h1 className="text-2xl font-semibold">Mis edificios</h1>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/buildings/new"
-              className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white"
-            >
-              Crear edificio
-            </Link>
-            <LogoutButton />
-          </div>
-        </div>
-        {params?.error ? (
-          <p className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-            {params.error}
-          </p>
-        ) : null}
-        <div className="mb-6 flex gap-3 text-sm">
+    <PageShell>
+      <Card>
+        <PageHeader
+          title="Mis edificios"
+          description="Administrá edificios activos y archivados."
+          actions={
+            <>
+              <Link href="/buildings/new" className={buttonStyles()}>
+                Crear edificio
+              </Link>
+              <LogoutButton />
+            </>
+          }
+        />
+        {params?.error ? <Alert variant="error">{params.error}</Alert> : null}
+        <div className="mb-6 flex gap-3 text-sm font-medium">
           <Link
             href="/buildings"
             className={
               selectedStatus === "active"
-                ? "font-semibold text-[var(--accent)]"
-                : "text-[var(--muted)]"
+                ? "text-indigo-700"
+                : "text-slate-500 hover:text-indigo-700"
             }
           >
             Activos
@@ -91,42 +96,47 @@ export default async function BuildingsPage({ searchParams }: BuildingsPageProps
             href="/buildings?status=archived"
             className={
               selectedStatus === "archived"
-                ? "font-semibold text-[var(--accent)]"
-                : "text-[var(--muted)]"
+                ? "text-indigo-700"
+                : "text-slate-500 hover:text-indigo-700"
             }
           >
             Archivados
           </Link>
         </div>
         {!buildings?.length ? (
-          <p className="muted">
-            {selectedStatus === "active"
-              ? "Todavía no hay edificios activos."
-              : "No hay edificios archivados."}
-          </p>
+          <EmptyState
+            title={
+              selectedStatus === "active"
+                ? "Todavía no hay edificios activos"
+                : "No hay edificios archivados"
+            }
+            description="Los edificios que cargues van a aparecer en esta vista."
+          />
         ) : (
           <div className="grid gap-4">
             {buildings.map((building) => (
               <article
                 key={building.id}
-                className="rounded-md border border-[var(--border)] bg-white p-4"
+                className="rounded-xl border border-slate-200 bg-white p-4"
               >
                 <div className="flex flex-col justify-between gap-3 md:flex-row">
                   <div>
-                    <h2 className="text-lg font-semibold">
+                    <h2 className="text-lg font-semibold text-slate-900">
                       <Link href={`/buildings/${building.id}`}>
                         {building.name}
                       </Link>
                     </h2>
-                    <p className="muted text-sm">
+                    <p className="text-sm text-slate-500">
                       {building.address || "Sin dirección"}
                     </p>
                   </div>
-                  <div className="text-sm md:text-right">
-                    <p className="font-medium">{building.status}</p>
-                    <p className="muted">Creado: {formatDate(building.created_at)}</p>
+                  <div className="grid gap-2 text-sm md:justify-items-end">
+                    <StatusBadge status={building.status} />
+                    <p className="text-slate-500">
+                      Creado: {formatDate(building.created_at)}
+                    </p>
                     {building.archived_at ? (
-                      <p className="muted">
+                      <p className="text-slate-500">
                         Archivado: {formatDate(building.archived_at)}
                       </p>
                     ) : null}
@@ -134,15 +144,17 @@ export default async function BuildingsPage({ searchParams }: BuildingsPageProps
                 </div>
                 <dl className="mt-4 grid gap-3 text-sm md:grid-cols-2">
                   <div>
-                    <dt className="font-medium">CUIT</dt>
-                    <dd className="muted">{building.cuit || "Sin dato"}</dd>
+                    <dt className="font-medium text-slate-900">CUIT</dt>
+                    <dd className="text-slate-500">
+                      {building.cuit || "Sin dato"}
+                    </dd>
                   </div>
                   <div>
-                    <dt className="font-medium">Detalle</dt>
+                    <dt className="font-medium text-slate-900">Detalle</dt>
                     <dd>
                       <Link
                         href={`/buildings/${building.id}`}
-                        className="text-[var(--accent)]"
+                        className="font-medium text-indigo-700 hover:text-indigo-800"
                       >
                         Ver edificio
                       </Link>
@@ -153,7 +165,7 @@ export default async function BuildingsPage({ searchParams }: BuildingsPageProps
             ))}
           </div>
         )}
-      </section>
-    </main>
+      </Card>
+    </PageShell>
   );
 }

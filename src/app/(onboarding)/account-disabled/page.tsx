@@ -1,17 +1,17 @@
 import { LogoutButton } from "@/components/auth/logout-button";
+import { Card, PageHeader, PageShell, StatusBadge } from "@/components/ui";
 
 export default function AccountDisabledPage() {
   return (
-    <main className="page-shell">
-      <section className="panel max-w-xl">
-        <h1 className="mb-3 text-2xl font-semibold">Cuenta deshabilitada</h1>
-        <p className="muted">
-          Esta cuenta no puede operar el sistema. Contactá al equipo de Erymon.
-        </p>
-        <div className="mt-6">
-          <LogoutButton />
-        </div>
-      </section>
-    </main>
+    <PageShell>
+      <Card className="max-w-xl">
+        <PageHeader
+          title="Cuenta deshabilitada"
+          description="Esta cuenta no puede operar el sistema. Contactá al equipo de Erymon."
+          actions={<StatusBadge status="disabled" />}
+        />
+        <LogoutButton />
+      </Card>
+    </PageShell>
   );
 }
